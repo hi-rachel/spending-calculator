@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import "../index.css";
 
 const getSum = (numbers) => {
@@ -13,24 +13,35 @@ const getSum = (numbers) => {
 
 const AddSpending = () => {
   // 지출 항목
-  const [spendingItems, setSpendingItems] = useState([]);
+  const [spendingItems, setSpendingItems] = useState(() => {
+    const storedItems = JSON.parse(localStorage.getItem("spending"));
+    if (storedItems !== null) {
+      return storedItems;
+    } else return [];
+  });
+
   const [inputItem, setInputItem] = useState("");
 
   // 지출 금액
   const [inputSpending, setInputSpending] = useState("");
 
-  const [nextId, setNextId] = useState(1);
+  useEffect(() => {
+    localStorage.setItem("spending", JSON.stringify(spendingItems));
+  }, [spendingItems]);
 
   const onChangeItem = (e) => setInputItem(e.target.value);
   const onChangeSpending = (e) => setInputSpending(e.target.value);
 
   const onClick = () => {
     const nextSpending = spendingItems.concat({
-      id: nextId,
+      id: inputItem,
       text: inputItem,
       spending: parseInt(inputSpending),
+      time: Date.now(),
     });
-    setNextId(nextId + 1);
+    const sortSpending = nextSpending.sort(function (a, b) {
+      return b.time - a.time;
+    });
     setSpendingItems(nextSpending);
 
     setInputItem("");
@@ -48,7 +59,7 @@ const AddSpending = () => {
 
   const spendigList = spendingItems.map((item) => (
     <>
-      <div className="flex mb-2" key={item.id}>
+      <div className="flex mb-2 justify-center" key={item}>
         <li>
           {item.text}: {item.spending}원
         </li>
@@ -63,7 +74,8 @@ const AddSpending = () => {
   ));
   return (
     <>
-      <div className="flex flex-wrap justify-center align-middle mt-6">
+      <div>{}</div>
+      <div className="flex flex-wrap justify-center align-middle mt-6 mb-6">
         <input
           type="text"
           value={inputItem}
@@ -85,11 +97,11 @@ const AddSpending = () => {
           추가
         </button>
       </div>
-      <div className="flex justify-center">
+      <div className="container mx-auto shadow-lg w-1/2 rounded-md overflow-y-scroll p-6">
         <ul>{spendigList}</ul>
-      </div>
-      <div>
-        <b>총 지출:</b> {spendingSum}
+        <div className="flex justify-center mt-6">
+          <b>총 지출: {spendingSum}원 </b>
+        </div>
       </div>
     </>
   );
