@@ -1,10 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "../index.css";
 
+const getSum = (numbers) => {
+  console.log("합계 계산 중");
+  if (numbers.length === 0) return 0;
+  const sum = numbers
+    .map((item) => item.spending)
+    .reduce((prev, cur) => prev + cur, 0);
+  console.log(sum);
+  return sum;
+};
+
 const AddSpending = () => {
+  // 지출 항목
   const [spendingItems, setSpendingItems] = useState([]);
   const [inputItem, setInputItem] = useState("");
 
+  // 지출 금액
   const [inputSpending, setInputSpending] = useState("");
 
   const [nextId, setNextId] = useState(1);
@@ -16,7 +28,7 @@ const AddSpending = () => {
     const nextSpending = spendingItems.concat({
       id: nextId,
       text: inputItem,
-      spending: inputSpending,
+      spending: parseInt(inputSpending),
     });
     setNextId(nextId + 1);
     setSpendingItems(nextSpending);
@@ -31,6 +43,8 @@ const AddSpending = () => {
       setSpendingItems(nextSpending);
     }
   };
+
+  const spendingSum = useMemo(() => getSum(spendingItems), [spendingItems]);
 
   const spendigList = spendingItems.map((item) => (
     <>
@@ -73,6 +87,9 @@ const AddSpending = () => {
       </div>
       <div className="flex justify-center">
         <ul>{spendigList}</ul>
+      </div>
+      <div>
+        <b>총 지출:</b> {spendingSum}
       </div>
     </>
   );
