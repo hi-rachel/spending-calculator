@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/spending-calculator/static/css/main.65bdaaf6.css",
+    "main.js": "/spending-calculator/static/js/main.673d6422.js",
+    "index.html": "/spending-calculator/index.html",
+    "main.65bdaaf6.css.map": "/spending-calculator/static/css/main.65bdaaf6.css.map",
+    "main.673d6422.js.map": "/spending-calculator/static/js/main.673d6422.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.65bdaaf6.css",
+    "static/js/main.673d6422.js"
+  ]
+}
