@@ -27,38 +27,62 @@ const AddSpending = () => {
   }, [spendingItems]);
 
   // useCallback을 이용해 컴포넌트가 처음 렌더링될 때만 함수 생성
-  const onChangeItem = useCallback((e) => {
+  const handleChangeItem = useCallback((e) => {
     setInputItem(e.target.value);
   }, []);
 
-  const onChangeSpending = useCallback((e) => {
+  const handleChangeSpending = useCallback((e) => {
     setInputSpending(e.target.value);
   }, []);
 
-  // [] 안에 상태값이 바뀌었을 때만 새로 작동
-  const onClick = useCallback(() => {
-    const nextSpending = spendingItems.concat({
-      id: inputItem,
-      text: inputItem,
-      spending: parseInt(inputSpending),
-      time: Date.now(),
-    });
-    // 내림차순
-    nextSpending.sort(function (a, b) {
-      return b.time - a.time;
-    });
-    setSpendingItems(nextSpending);
+  const handleClick = useCallback(() => {
+    if (validateInput(inputItem, inputSpending) === true) {
+      const nextSpending = spendingItems.concat({
+        id: inputItem,
+        text: inputItem,
+        spending: parseInt(inputSpending),
+        time: Date.now(),
+      });
+      nextSpending.sort(function (a, b) {
+        return b.time - a.time;
+      });
+      setSpendingItems(nextSpending);
 
-    setInputItem("");
-    setInputSpending("");
+      setInputItem("");
+      setInputSpending("");
 
-    inputEl.current.focus();
+      inputEl.current.focus();
+    }
   }, [inputItem, inputSpending, spendingItems]);
 
-  const onRemove = (id) => {
+  const handleRemove = (id) => {
     if (window.confirm("정말 이 항목을 지울까요?") === true) {
       const nextSpending = spendingItems.filter((item) => item.id !== id);
       setSpendingItems(nextSpending);
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleClick();
+    }
+  };
+
+  const validateInput = (inputItem, inputSpending) => {
+    let error = "";
+    if (!inputItem) {
+      error = "지출 항목을 작성해 주세요.";
+    }
+    if (!inputSpending) {
+      error = "지출 금액을 작성해 주세요.";
+    }
+    if (!inputItem & !inputSpending) {
+      error = "지출을 입력해 주세요.";
+    }
+    if (inputItem && inputSpending) {
+      return true;
+    } else {
+      alert(error);
     }
   };
 
@@ -74,7 +98,7 @@ const AddSpending = () => {
         </li>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
-          onClick={() => onRemove(item.id)}
+          onClick={() => handleRemove(item.id)}
         >
           ⅹ
         </button>
@@ -83,26 +107,30 @@ const AddSpending = () => {
   ));
   return (
     <>
-      <div>{}</div>
-      <div className="flex flex-wrap justify-center align-middle mt-6 mb-6">
+      <div
+        className="flex flex-wrap justify-center align-middle mt-6 mb-6"
+        onKeyDown={handleKeyDown}
+      >
         <input
           type="text"
           value={inputItem}
-          onChange={onChangeItem}
+          onChange={handleChangeItem}
           className="px-4 py-3 rounded-full"
           placeholder="지출 항목"
           ref={inputEl}
+          required
         />
         <input
           type="number"
           value={inputSpending}
-          onChange={onChangeSpending}
+          onChange={handleChangeSpending}
           className="px-4 py-3 rounded-full"
           placeholder="지출 금액"
+          required
         />
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={onClick}
+          onClick={handleClick}
         >
           추가
         </button>
