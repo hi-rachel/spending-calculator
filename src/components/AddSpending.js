@@ -1,15 +1,12 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useMemo,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import "../index.css";
-
-const getSum = (numbers) => {
-  console.log("합계 계산 중");
-  if (numbers.length === 0) return 0;
-  const sum = numbers
-    .map((item) => item.spending)
-    .reduce((prev, cur) => prev + cur, 0);
-  console.log(sum);
-  return sum;
-};
+import { getSum } from "./CalculateSum";
 
 const AddSpending = () => {
   // 지출 항목
@@ -21,32 +18,42 @@ const AddSpending = () => {
   });
 
   const [inputItem, setInputItem] = useState("");
-
   // 지출 금액
   const [inputSpending, setInputSpending] = useState("");
+  const inputEl = useRef(null);
 
   useEffect(() => {
     localStorage.setItem("spending", JSON.stringify(spendingItems));
   }, [spendingItems]);
 
-  const onChangeItem = (e) => setInputItem(e.target.value);
-  const onChangeSpending = (e) => setInputSpending(e.target.value);
+  // useCallback을 이용해 컴포넌트가 처음 렌더링될 때만 함수 생성
+  const onChangeItem = useCallback((e) => {
+    setInputItem(e.target.value);
+  }, []);
 
-  const onClick = () => {
+  const onChangeSpending = useCallback((e) => {
+    setInputSpending(e.target.value);
+  }, []);
+
+  // [] 안에 상태값이 바뀌었을 때만 새로 작동
+  const onClick = useCallback(() => {
     const nextSpending = spendingItems.concat({
       id: inputItem,
       text: inputItem,
       spending: parseInt(inputSpending),
       time: Date.now(),
     });
-    const sortSpending = nextSpending.sort(function (a, b) {
+    // 내림차순
+    nextSpending.sort(function (a, b) {
       return b.time - a.time;
     });
     setSpendingItems(nextSpending);
 
     setInputItem("");
     setInputSpending("");
-  };
+
+    inputEl.current.focus();
+  }, [inputItem, inputSpending, spendingItems]);
 
   const onRemove = (id) => {
     if (window.confirm("정말 이 항목을 지울까요?") === true) {
@@ -55,6 +62,8 @@ const AddSpending = () => {
     }
   };
 
+  // useMemo를 사용해 렌더링하는 과정 중 지츨 값이 바뀌었을 때만 연산을 실행하도록 최적화
+  // 값이 바뀌지 않았다면 이전에 연산했던 결과를 다시 사용하는 방식
   const spendingSum = useMemo(() => getSum(spendingItems), [spendingItems]);
 
   const spendigList = spendingItems.map((item) => (
@@ -82,6 +91,7 @@ const AddSpending = () => {
           onChange={onChangeItem}
           className="px-4 py-3 rounded-full"
           placeholder="지출 항목"
+          ref={inputEl}
         />
         <input
           type="number"
