@@ -5,8 +5,9 @@ import React, {
   useCallback,
   useRef,
 } from "react";
+
 import "../index.css";
-import { getSum } from "./CalculateSum";
+import { getSum } from "../getSum";
 
 const AddSpending = () => {
   // 지출 항목
@@ -38,13 +39,13 @@ const AddSpending = () => {
   const handleClick = useCallback(() => {
     if (validateInput(inputItem, inputSpending) === true) {
       const nextSpending = spendingItems.concat({
-        id: inputItem,
+        id: Date.now(),
         text: inputItem,
         spending: parseInt(inputSpending),
-        time: Date.now(),
+        time: new Date().toISOString().split("T")[0],
       });
       nextSpending.sort(function (a, b) {
-        return b.time - a.time;
+        return b.id - a.id;
       });
       setSpendingItems(nextSpending);
 
@@ -74,7 +75,7 @@ const AddSpending = () => {
       error = "지출 항목을 작성해 주세요.";
     }
     if (!inputSpending) {
-      error = "지출 금액을 작성해 주세요.";
+      error = "지출 금액(숫자)을 작성해 주세요.";
     }
     if (!inputItem & !inputSpending) {
       error = "지출을 입력해 주세요.";
@@ -93,9 +94,16 @@ const AddSpending = () => {
   const spendigList = spendingItems.map((item) => (
     <>
       <div className="flex mb-2 justify-center" key={item}>
-        <li>
-          {item.text}: {item.spending}원
+        <li className="py-2">
+          <span className="opacity-40">({item.time})</span> {item.text}:{" "}
+          {item.spending}원
         </li>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
+          key={item.id}
+        >
+          Edit
+        </button>
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
           onClick={() => handleRemove(item.id)}
