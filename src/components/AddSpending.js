@@ -4,10 +4,13 @@ import React, {
   useEffect,
   useCallback,
   useRef,
+  createContext,
 } from "react";
 
 import "../index.css";
 import { getSum } from "../getSum";
+
+export const SpendingContext = createContext("");
 
 const AddSpending = () => {
   // 지출 항목
@@ -22,6 +25,9 @@ const AddSpending = () => {
   // 지출 금액
   const [inputSpending, setInputSpending] = useState("");
   const inputEl = useRef(null);
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [removeAlert, setRemoveAlert] = useState(false);
 
   useEffect(() => {
     localStorage.setItem("spending", JSON.stringify(spendingItems));
@@ -53,6 +59,8 @@ const AddSpending = () => {
       setInputSpending("");
 
       inputEl.current.focus();
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000);
     }
   }, [inputItem, inputSpending, spendingItems]);
 
@@ -60,6 +68,14 @@ const AddSpending = () => {
     if (window.confirm("정말 이 항목을 지울까요?") === true) {
       const nextSpending = spendingItems.filter((item) => item.id !== id);
       setSpendingItems(nextSpending);
+      setRemoveAlert(true);
+      setTimeout(() => setRemoveAlert(false), 3000);
+    }
+  };
+
+  const handleRemoveAll = () => {
+    if (window.confirm("정말 모든 지출 항목을 지우시겠습니까?") === true) {
+      setSpendingItems([]);
     }
   };
 
@@ -143,6 +159,16 @@ const AddSpending = () => {
           추가
         </button>
       </div>
+      {showAlert && (
+        <div className="success-alert font-semibold text-center p-1.5 container rounded-md bg-cyan-100 mb-2 mx-auto w-1/2">
+          성공적으로 추가되었습니다.
+        </div>
+      )}
+      {removeAlert && (
+        <div className="success-alert font-semibold text-center p-1.5 container rounded-md bg-cyan-100 mb-2 mx-auto w-1/2">
+          성공적으로 삭제되었습니다.
+        </div>
+      )}
       <div className="container mx-auto shadow-lg w-1/2 rounded-md overflow-y-scroll p-6">
         <ul>{spendigList}</ul>
         <div className="flex justify-center mt-6">
