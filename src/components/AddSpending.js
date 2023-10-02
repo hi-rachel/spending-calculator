@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import "../index.css";
 import { getSum } from "../getSum";
+import EditableText from "./EditableText";
+import EditableSpending from "./EditableSpending";
 
 const AddSpending = () => {
   // 지출 항목
@@ -21,6 +23,8 @@ const AddSpending = () => {
   // 지출 금액
   const [inputSpending, setInputSpending] = useState("");
   const inputEl = useRef(null);
+
+  const [isEditing, setIsEditing] = useState(false);
 
   const [showAlert, setShowAlert] = useState(false);
   const [removeAlert, setRemoveAlert] = useState(false);
@@ -60,14 +64,17 @@ const AddSpending = () => {
     }
   }, [inputItem, inputSpending, spendingItems]);
 
-  const handleRemove = (id) => {
-    if (window.confirm("정말 이 항목을 지울까요?") === true) {
-      const nextSpending = spendingItems.filter((item) => item.id !== id);
-      setSpendingItems(nextSpending);
-      setRemoveAlert(true);
-      setTimeout(() => setRemoveAlert(false), 3000);
-    }
-  };
+  const handleRemove = useCallback(
+    (id) => {
+      if (window.confirm("정말 이 항목을 지울까요?") === true) {
+        const nextSpending = spendingItems.filter((item) => item.id !== id);
+        setSpendingItems(nextSpending);
+        setRemoveAlert(true);
+        setTimeout(() => setRemoveAlert(false), 3000);
+      }
+    },
+    [spendingItems]
+  );
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -100,16 +107,21 @@ const AddSpending = () => {
   const spendigList = spendingItems.map((item) => (
     <>
       <div className="flex mb-2 justify-center" key={item}>
-        <li className="py-2">
-          <span className="opacity-40">({item.time})</span> {item.text}:{" "}
-          {item.spending}원
+        <li className="py-2" key={crypto.randomUUID()}>
+          <p className="opacity-40">({item.time})</p>
+          <span> </span>
+          <EditableText initialText={item.text} id={item.id} />
+          {/* <p>{item.text}</p> */}
+          <span>: </span>
+          <EditableSpending initialSpending={item.spending} id={item.id} />
+          {/* <p>{item.spending}</p> */}
+          <span>원</span>
         </li>
-        <button
+        {/* <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
-          key={item.id}
         >
           Edit
-        </button>
+        </button> */}
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
           onClick={() => handleRemove(item.id)}
