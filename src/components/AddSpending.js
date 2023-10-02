@@ -4,13 +4,9 @@ import React, {
   useEffect,
   useCallback,
   useRef,
-  createContext,
 } from "react";
-
 import "../index.css";
 import { getSum } from "../getSum";
-
-export const SpendingContext = createContext("");
 
 const AddSpending = () => {
   // 지출 항목
@@ -70,12 +66,6 @@ const AddSpending = () => {
       setSpendingItems(nextSpending);
       setRemoveAlert(true);
       setTimeout(() => setRemoveAlert(false), 3000);
-    }
-  };
-
-  const handleRemoveAll = () => {
-    if (window.confirm("정말 모든 지출 항목을 지우시겠습니까?") === true) {
-      setSpendingItems([]);
     }
   };
 
