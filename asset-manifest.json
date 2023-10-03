@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/spending-calculator/static/css/main.213c02d5.css",
-    "main.js": "/spending-calculator/static/js/main.07d216c1.js",
+    "main.js": "/spending-calculator/static/js/main.13d875d5.js",
     "index.html": "/spending-calculator/index.html",
     "main.213c02d5.css.map": "/spending-calculator/static/css/main.213c02d5.css.map",
-    "main.07d216c1.js.map": "/spending-calculator/static/js/main.07d216c1.js.map"
+    "main.13d875d5.js.map": "/spending-calculator/static/js/main.13d875d5.js.map"
   },
   "entrypoints": [
     "static/css/main.213c02d5.css",
-    "static/js/main.07d216c1.js"
+    "static/js/main.13d875d5.js"
   ]
 }
