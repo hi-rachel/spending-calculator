@@ -3,7 +3,8 @@ export const getSum = (numbers) => {
   if (numbers.length === 0) return 0;
   const sum = numbers
     .map((item) => item.spending)
-    .reduce((prev, cur) => prev + cur, 0);
+    .reduce((prev, cur) => prev + cur, 0)
+    .toLocaleString();
   console.log(sum);
   return sum;
 };

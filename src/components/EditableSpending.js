@@ -4,8 +4,8 @@ const EditableSpending = ({ initialSpending, id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [spending, setSpending] = useState(initialSpending);
   const [editId, setEditId] = useState(0);
-  const origin = JSON.parse(localStorage.getItem("spending"));
 
+  const origin = JSON.parse(localStorage.getItem("spending"));
   const updateOrigin = origin.map((item) => {
     return item.id === id ? { ...item, spending } : item;
   });
@@ -17,36 +17,41 @@ const EditableSpending = ({ initialSpending, id }) => {
   };
 
   const handleChange = (event) => {
-    setSpending(event.target.value);
+    isNaN(event.target.value)
+      ? setSpending(0)
+      : setSpending(parseInt(event.target.value));
   };
 
   const handleBlur = () => {
     setIsEditing(false);
-    // Save the changes or perform any required actions here
+    window.location.reload();
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       setIsEditing(false);
+      window.location.reload();
     }
   };
 
   return (
-    <div style={{ display: "inline" }} onDoubleClick={handleDoubleClick}>
-      {isEditing ? (
-        <input
-          style={{ width: "auto" }}
-          type="number"
-          value={spending}
-          onKeyDown={handleKeyDown}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          required
-        />
-      ) : (
-        <span>{spending}</span>
-      )}
-    </div>
+    <>
+      <div style={{ display: "inline" }} onDoubleClick={handleDoubleClick}>
+        {isEditing ? (
+          <input
+            style={{ width: "auto" }}
+            type="number"
+            value={spending}
+            onKeyDown={handleKeyDown}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            required
+          />
+        ) : (
+          <span>{spending.toLocaleString()}</span>
+        )}
+      </div>
+    </>
   );
 };
 

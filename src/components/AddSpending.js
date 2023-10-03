@@ -24,8 +24,6 @@ const AddSpending = () => {
   const [inputSpending, setInputSpending] = useState("");
   const inputEl = useRef(null);
 
-  const [isEditing, setIsEditing] = useState(false);
-
   const [showAlert, setShowAlert] = useState(false);
   const [removeAlert, setRemoveAlert] = useState(false);
 
@@ -107,21 +105,18 @@ const AddSpending = () => {
   const spendigList = spendingItems.map((item) => (
     <>
       <div className="flex mb-2 justify-center" key={item}>
-        <li className="py-2" key={crypto.randomUUID()}>
+        <li
+          className="py-2"
+          key={crypto.randomUUID()}
+          style={{ cursor: "pointer" }}
+        >
           <p className="opacity-40">({item.time})</p>
           <span> </span>
           <EditableText initialText={item.text} id={item.id} />
-          {/* <p>{item.text}</p> */}
           <span>: </span>
           <EditableSpending initialSpending={item.spending} id={item.id} />
-          {/* <p>{item.spending}</p> */}
           <span>원</span>
         </li>
-        {/* <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
-        >
-          Edit
-        </button> */}
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
           onClick={() => handleRemove(item.id)}

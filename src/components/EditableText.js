@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-// spending {{"id": }, {"text": }, {"spending": } {"time": }}
-
 const EditableText = ({ initialText, id }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [text, setText] = useState(initialText);
@@ -24,7 +22,6 @@ const EditableText = ({ initialText, id }) => {
 
   const handleBlur = () => {
     setIsEditing(false);
-    // Save the changes or perform any required actions here
   };
 
   const handleKeyDown = (e) => {
