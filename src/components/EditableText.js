@@ -31,10 +31,11 @@ const EditableText = ({ initialText, id }) => {
   };
 
   return (
-    <div style={{ display: "inline" }} onDoubleClick={handleDoubleClick}>
+    <div className="w-full break-all" onDoubleClick={handleDoubleClick}>
       {isEditing ? (
         <input
-          style={{ width: "auto" }}
+          className="w-full"
+          autoFocus
           type="text"
           value={text}
           onKeyDown={handleKeyDown}
@@ -43,7 +44,7 @@ const EditableText = ({ initialText, id }) => {
           required
         />
       ) : (
-        <span>{text}</span>
+        <span className="block w-fit">{text}</span>
       )}
     </div>
   );

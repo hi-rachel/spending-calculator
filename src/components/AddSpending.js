@@ -18,7 +18,6 @@ const AddSpending = () => {
       return storedItems;
     } else return [];
   });
-
   const [inputItem, setInputItem] = useState("");
   // 지출 금액
   const [inputSpending, setInputSpending] = useState("");
@@ -104,21 +103,19 @@ const AddSpending = () => {
 
   const spendigList = spendingItems.map((item) => (
     <>
-      <div className="flex mb-2 justify-center" key={item}>
-        <li
-          className="py-2"
-          key={crypto.randomUUID()}
-          style={{ cursor: "pointer" }}
-        >
-          <p className="opacity-40">({item.time})</p>
-          <span> </span>
-          <EditableText initialText={item.text} id={item.id} />
-          <span>: </span>
-          <EditableSpending initialSpending={item.spending} id={item.id} />
-          <span>원</span>
-        </li>
+      <div className="px-2 py-4 flex items-center relative rounded">
+        <div className="flex-1 grow mb-2 items-start" key={item}>
+          <p className="opacity-40 break-keep w-fit mr-2 absolute left-0 top-0">
+            ({item.time})
+          </p>
+          <li className="flex mt-3 cursor-pointer" key={crypto.randomUUID()}>
+            <EditableText initialText={item.text} id={item.id} />
+            <span>: </span>
+            <EditableSpending initialSpending={item.spending} id={item.id} />
+          </li>
+        </div>
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3"
+          className="ml-2 h-10 flex bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => handleRemove(item.id)}
         >
           ⅹ
@@ -166,10 +163,10 @@ const AddSpending = () => {
           성공적으로 삭제되었습니다.
         </div>
       )}
-      <div className="container mx-auto shadow-lg w-1/2 rounded-md overflow-y-scroll p-6">
+      <div className="container mx-auto shadow-lg w-1/2 rounded-md p-6">
         <ul>{spendigList}</ul>
-        <div className="flex justify-center mt-6">
-          <b>총 지출: {spendingSum}원 </b>
+        <div className="flex justify-center mt-6 w-fit break-all text-center">
+          <b>총 지출: {spendingSum} 원 </b>
         </div>
       </div>
     </>

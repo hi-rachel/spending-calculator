@@ -36,10 +36,11 @@ const EditableSpending = ({ initialSpending, id }) => {
 
   return (
     <>
-      <div style={{ display: "inline" }} onDoubleClick={handleDoubleClick}>
+      <div className="w-full break-all" onDoubleClick={handleDoubleClick}>
         {isEditing ? (
           <input
-            style={{ width: "auto" }}
+            className="w-full"
+            autoFocus
             type="number"
             value={spending}
             onKeyDown={handleKeyDown}
@@ -48,7 +49,7 @@ const EditableSpending = ({ initialSpending, id }) => {
             required
           />
         ) : (
-          <span>{spending.toLocaleString()}</span>
+          <span className="block w-fit">{spending.toLocaleString()} 원</span>
         )}
       </div>
     </>
