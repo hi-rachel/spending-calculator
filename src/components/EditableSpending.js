@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const EditableSpending = ({ initialSpending, id }) => {
+const EditableSpending = ({ initialSpending, id, plusMinus }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [spending, setSpending] = useState(initialSpending);
   const [editId, setEditId] = useState(0);
@@ -49,7 +49,10 @@ const EditableSpending = ({ initialSpending, id }) => {
             required
           />
         ) : (
-          <span className="block w-fit">{spending.toLocaleString()} 원</span>
+          <>
+            <span>{plusMinus ? "+" : "-"}</span>
+            <span className="w-fit">{spending.toLocaleString()} 원</span>
+          </>
         )}
       </div>
     </>

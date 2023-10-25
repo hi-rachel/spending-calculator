@@ -6,7 +6,8 @@ import React, {
   useRef,
 } from "react";
 import "../index.css";
-import { getSum } from "../getSum";
+import { getSum } from "./helper/getSum";
+import { validateInput } from "./helper/validateInput";
 import EditableText from "./EditableText";
 import EditableSpending from "./EditableSpending";
 
@@ -18,6 +19,10 @@ const AddSpending = () => {
       return storedItems;
     } else return [];
   });
+
+  // 지출 -(false), 수입 +(true)
+  const [plusMinus, SetPlusMinus] = useState(false);
+
   const [inputItem, setInputItem] = useState("");
   // 지출 금액
   const [inputSpending, setInputSpending] = useState("");
@@ -42,6 +47,7 @@ const AddSpending = () => {
   const handleClick = useCallback(() => {
     if (validateInput(inputItem, inputSpending) === true) {
       const nextSpending = spendingItems.concat({
+        plusMinus: plusMinus,
         id: Date.now(),
         text: inputItem,
         spending: parseInt(inputSpending),
@@ -59,7 +65,7 @@ const AddSpending = () => {
       setShowAlert(true);
       setTimeout(() => setShowAlert(false), 3000);
     }
-  }, [inputItem, inputSpending, spendingItems]);
+  }, [inputItem, inputSpending, spendingItems, plusMinus]);
 
   const handleRemove = useCallback(
     (id) => {
@@ -79,24 +85,6 @@ const AddSpending = () => {
     }
   };
 
-  const validateInput = (inputItem, inputSpending) => {
-    let error = "";
-    if (!inputItem) {
-      error = "지출 항목을 작성해 주세요.";
-    }
-    if (!inputSpending) {
-      error = "지출 금액(숫자)을 작성해 주세요.";
-    }
-    if (!inputItem & !inputSpending) {
-      error = "지출을 입력해 주세요.";
-    }
-    if (inputItem && inputSpending) {
-      return true;
-    } else {
-      alert(error);
-    }
-  };
-
   // useMemo를 사용해 렌더링하는 과정 중 지츨 값이 바뀌었을 때만 연산을 실행하도록 최적화
   // 값이 바뀌지 않았다면 이전에 연산했던 결과를 다시 사용하는 방식
   const spendingSum = useMemo(() => getSum(spendingItems), [spendingItems]);
@@ -110,8 +98,11 @@ const AddSpending = () => {
           </p>
           <li className="flex mt-3 cursor-pointer" key={crypto.randomUUID()}>
             <EditableText initialText={item.text} id={item.id} />
-            <span>: </span>
-            <EditableSpending initialSpending={item.spending} id={item.id} />
+            <EditableSpending
+              initialSpending={item.spending}
+              id={item.id}
+              plusMinus={item.plusMinus}
+            />
           </li>
         </div>
         <button
@@ -129,6 +120,10 @@ const AddSpending = () => {
         className="flex flex-wrap justify-center align-middle mt-6 mb-6"
         onKeyDown={handleKeyDown}
       >
+        <div>
+          <div onClick={() => SetPlusMinus(true)}>✚</div>
+          <div onClick={() => SetPlusMinus(false)}>﹣</div>
+        </div>
         <input
           type="text"
           value={inputItem}
@@ -165,7 +160,7 @@ const AddSpending = () => {
       )}
       <div className="container mx-auto shadow-lg w-1/2 rounded-md p-6">
         <ul>{spendigList}</ul>
-        <div className="flex justify-center mt-6 w-fit break-all text-center">
+        <div className="flex justify-center mt-6 break-all text-center">
           <b>총 지출: {spendingSum} 원 </b>
         </div>
       </div>
